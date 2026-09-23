@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>OneClass — Бидний дурсамж</title>
+  <meta name="description" content="OneClass — ангийн зураг, видео, дурсамжийг нэг дор.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#home"><span>O</span> OneClass</a>
+  <nav>
+    <a href="#photos">Зураг</a>
+    <a href="#videos">Видео</a>
+    <a href="#memories">Дурсамж</a>
+    <a href="#members">Манай анги</a>
+  </nav>
+  <a class="join" href="#upload">Зураг нэмэх</a>
+</header>
+
+<main id="home">
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">ONE CLASS • ONE MEMORY</p>
+      <h1>Бидний бүх<br><em>дурсамж</em> нэг дор.</h1>
+      <p class="lead">Ангиараа авхуулсан зураг, видео, хөгжилтэй мөчүүдээ нэг дор хадгалж, хамтдаа нэмээд үзээрэй.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#photos">Дурсамжаа үзэх →</a>
+        <a class="btn ghost" href="#upload">Зураг / видео нэмэх</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="fake-photo"><span>ONECLASS</span><small>OUR CLASS • 2026</small></div>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div><strong id="photoCount">0</strong><span>Зураг</span></div>
+    <div><strong id="videoCount">0</strong><span>Видео</span></div>
+    <div><strong id="memoryCount">0</strong><span>Дурсамж</span></div>
+    <div><strong>∞</strong><span>Хамтдаа</span></div>
+  </section>
+
+  <section id="photos" class="section">
+    <div class="section-head">
+      <div><p class="eyebrow">GALLERY</p><h2>Зургийн цомог</h2></div>
+      <button class="text-btn" id="clearDemo">Жишээ зургуудыг арилгах</button>
+    </div>
+    <div id="gallery" class="gallery"></div>
+    <p id="emptyGallery" class="empty">Одоохондоо зураг алга. Доорх хэсгээс зураг нэмээрэй.</p>
+  </section>
+
+  <section id="videos" class="section dark">
+    <div class="section-head">
+      <div><p class="eyebrow">VIDEOS</p><h2>Бичлэгүүд</h2></div>
+    </div>
+    <div id="videoList" class="video-list"></div>
+    <p id="emptyVideos" class="empty">Одоохондоо видео алга.</p>
+  </section>
+
+  <section id="memories" class="section">
+    <div class="section-head">
+      <div><p class="eyebrow">MEMORIES</p><h2>Онцгой мөчүүд</h2></div>
+    </div>
+    <div class="memory-grid">
+      <article><span>01</span><h3>Анхны өдөр</h3><p>Энд ангийнхаа анхны дурсамжийг бичиж болно.</p></article>
+      <article><span>02</span><h3>Аялал</h3><p>Хамтдаа өнгөрүүлсэн аялал, хөгжилтэй мөчүүд.</p></article>
+      <article><span>03</span><h3>Төгсөлт</h3><p>Бидний мартагдашгүй төгсөлтийн дурсамж.</p></article>
+    </div>
+  </section>
+
+ <section id="members" class="section members">
+  <div class="members-header">
+    <p class="eyebrow">OUR CLASS</p>
+    <h2>Манай анги</h2>
+    <p>Бидний нэг анги, нэг түүх, олон дурсамж.</p>
+
+    <div class="class-info">
+      <strong id="memberCount">0</strong>
+      <span>сурагч</span>
+    </div>
+  </div>
+
+  <div id="memberList" class="member-list"></div>
+
+  <div class="member-add-box">
+    <h3>Сурагч нэмэх</h3>
+
+    <input
+      id="memberName"
+      type="text"
+      placeholder="Нэр"
+    >
+
+    <input
+      id="memberRole"
+      type="text"
+      placeholder="Мэргэжил / анги"
+      value="Сурагч"
+    >
+
+    <input
+      id="memberPhoto"
+      type="file"
+      accept="image/*"
+    >
+
+    <button id="addMemberBtn" class="member-add-btn">
+      + Сурагч нэмэх
+    </button>
+
+    <p id="memberStatus"></p>
+  </div>
+</section>
+
+  <section id="upload" class="upload section">
+    <div class="upload-box">
+      <p class="eyebrow">ADD MEMORY</p>
+      <h2>Дурсамжаа нэмээрэй</h2>
+      <p>Зураг эсвэл видео сонгоход энэ браузер дээр шууд харагдана. Одоогийн хувилбар нь demo тул файлуудыг бусад хүний төхөөрөмжтэй автоматаар хуваалцахгүй.</p>
+      <label class="file-btn">
+        + Файл сонгох
+        <input id="fileInput" type="file" accept="image/*,video/*" multiple hidden>
+      </label>
+      <p class="hint">JPG, PNG, WEBP, MP4, MOV гэх мэт • Нэг файл 50 MB хүртэл</p><p id="status" class="hint"></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <strong>OneClass</strong>
+  <span>Our memories, one place.</span>
+</footer>
+
+<script type="module" src="app-online.js"></script>
+</body>
+</html>
