@@ -254,3 +254,16 @@ footer{padding:35px 8vw;display:flex;justify-content:space-between;border-top:1p
   background: #111;
   color: #fff;
 }
+.hero{
+  min-height:650px;
+  padding:80px 8vw;
+  display:grid;
+  grid-template-columns:1fr .9fr;
+  gap:70px;
+  align-items:center;
+
+  color:#fff;
+  background:
+    linear-gradient(#00000055,#00000055),
+    url("forest.png") center center / cover no-repeat;
+}
