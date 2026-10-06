@@ -1,4 +1,4 @@
-```css
+
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
 
 :root{
@@ -698,4 +698,6 @@ footer strong{
     font-size:14px;
   }
 }
-```
+.hero{
+  background: linear-gradient(to right, #f1f9f1, #38f731, #2a2ada,#e0f731,#eaac26) !important;
+}
