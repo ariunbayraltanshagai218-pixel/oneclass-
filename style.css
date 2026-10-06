@@ -701,3 +701,9 @@ footer strong{
 .hero{
   background: linear-gradient(to right, #f1f9f1, #38f731, #2a2ada,#e0f731,#eaac26) !important;
 }
+.hero-card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
