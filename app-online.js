@@ -12,7 +12,53 @@ const supabase = createClient(
   SUPABASE_URL,
   SUPABASE_PUBLISHABLE_KEY
 );
+// LOGIN
+const loginScreen = document.querySelector("#loginScreen");
+const loginEmail = document.querySelector("#loginEmail");
+const loginPassword = document.querySelector("#loginPassword");
+const loginBtn = document.querySelector("#loginBtn");
+const loginStatus = document.querySelector("#loginStatus");
 
+async function checkLogin() {
+  await supabase.auth.signOut();
+  loginScreen.style.display = "grid";
+}
+
+loginBtn.addEventListener("click", async () => {
+  const email = loginEmail.value.trim();
+  const password = loginPassword.value;
+
+  if (!email || !password) {
+    loginStatus.textContent = "Email болон password оруулна уу.";
+    return;
+  }
+
+  loginStatus.textContent = "Нэвтэрч байна…";
+  loginBtn.disabled = true;
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
+
+  if (error) {
+    loginStatus.textContent = "Email эсвэл password буруу байна.";
+    loginBtn.disabled = false;
+    return;
+  }
+
+  loginStatus.textContent = "Амжилттай нэвтэрлээ!";
+  loginScreen.style.display = "none";
+  loginBtn.disabled = false;
+});
+
+checkLogin();
+const logoutBtn = document.querySelector("#logoutBtn");
+
+logoutBtn.addEventListener("click", async () => {
+  await supabase.auth.signOut();
+  loginScreen.style.display = "grid";
+});
 const gallery = document.querySelector("#gallery");
 const videoList = document.querySelector("#videoList");
 const fileInput = document.querySelector("#fileInput");
