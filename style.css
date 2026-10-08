@@ -707,3 +707,24 @@ footer strong{
   object-fit:cover;
   display:block;
 }
+.download-btn,
+.download-video-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 9px 14px;
+  background: #111;
+  color: #fff;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.download-btn:hover,
+.download-video-btn:hover {
+  opacity: .8;
+}
+
+.download-video-btn {
+  margin-left: 4px;
+}

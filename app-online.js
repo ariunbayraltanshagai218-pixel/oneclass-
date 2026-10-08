@@ -88,25 +88,63 @@ async function loadMedia() {
   render(data || []);
   status.textContent = "";
 }
-
 function render(items) {
-  gallery.innerHTML = ""; videoList.innerHTML = "";
+  gallery.innerHTML = "";
+  videoList.innerHTML = "";
+
   const photos = items.filter(x => x.type === "photo");
   const videos = items.filter(x => x.type === "video");
+
   photos.forEach(x => {
-    const el=document.createElement("div"); el.className="gallery-item";
-    el.innerHTML=`<img src="${x.public_url}" alt="${esc(x.name)}" loading="lazy">`;
+    const el = document.createElement("div");
+    el.className = "gallery-item";
+
+    el.innerHTML = `
+      <img src="${x.public_url}" alt="${esc(x.name)}" loading="lazy">
+
+      <a
+        href="${x.public_url}?download=${encodeURIComponent(x.name)}"
+        class="download-btn"
+        target="_blank"
+      >
+        ↓ Татах
+      </a>
+    `;
+
     gallery.appendChild(el);
   });
+
   videos.forEach(x => {
-    const el=document.createElement("div"); el.className="video-card";
-    el.innerHTML=`<video controls preload="metadata" src="${x.public_url}"></video><p>${esc(x.name)}</p>`;
+    const el = document.createElement("div");
+    el.className = "video-card";
+
+    el.innerHTML = `
+      <video
+        controls
+        preload="metadata"
+        src="${x.public_url}">
+      </video>
+
+      <p>${esc(x.name)}</p>
+
+      <a
+        href="${x.public_url}?download=${encodeURIComponent(x.name)}"
+        class="download-video-btn"
+        target="_blank"
+      >
+        ↓ Бичлэг татах
+      </a>
+    `;
+
     videoList.appendChild(el);
   });
+
   emptyGallery.style.display = photos.length ? "none" : "block";
   emptyVideos.style.display = videos.length ? "none" : "block";
+
   photoCount.textContent = photos.length;
   videoCount.textContent = videos.length;
+
   document.querySelector("#memoryCount").textContent = items.length;
 }
 fileInput.addEventListener("change", async (e) => {
