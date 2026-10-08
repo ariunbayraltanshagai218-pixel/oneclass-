@@ -143,7 +143,7 @@ function render(items) {
 
   document.querySelector("#memoryCount").textContent = items.length;
 }
-document.addEventListener("click", async (e) => {
+document.addEventListener("click", (e) => {
   const btn = e.target.closest(".download-btn, .download-video-btn");
 
   if (!btn) return;
@@ -151,38 +151,21 @@ document.addEventListener("click", async (e) => {
   const path = btn.dataset.path;
   const name = btn.dataset.name;
 
-  btn.disabled = true;
-  btn.textContent = "Татаж байна...";
+  const { data } = supabase.storage
+    .from(BUCKET)
+    .getPublicUrl(path);
 
-  try {
-    const { data, error } = await supabase.storage
-      .from(BUCKET)
-      .download(path);
-
-    if (error) throw error;
-
-    const url = URL.createObjectURL(data);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = name;
-
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-
-    URL.revokeObjectURL(url);
-
-  } catch (error) {
-    console.error("DOWNLOAD ERROR:", error);
-    alert("Файл татаж чадсангүй.\n" + error.message);
+  if (!data?.publicUrl) {
+    alert("Файлын холбоос олдсонгүй.");
+    return;
   }
 
-  btn.disabled = false;
+  const downloadUrl =
+    data.publicUrl +
+    "?download=" +
+    encodeURIComponent(name);
 
-  btn.textContent = btn.classList.contains("download-btn")
-    ? "↓ Татах"
-    : "↓ Бичлэг татах";
+  window.open(downloadUrl, "_blank");
 });
 fileInput.addEventListener("change", async (e) => {
   const files = [...e.target.files];
