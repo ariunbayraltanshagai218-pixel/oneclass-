@@ -33,6 +33,7 @@
     <a href="#members">Манай анги</a>
   </nav>
   <a class="join" href="#upload">Зураг нэмэх</a>
+  <a id="adminBtn" class="admin-btn" href="#admin">⚙ Admin</a>
   <button id="logoutBtn" class="logout-btn">Гарах</button>
 </header>
 
@@ -127,11 +128,36 @@
       accept="image/*"
     >
 
+    <input 
+    id="editMemberPhoto" 
+    type="file" 
+    accept="image/*"
+    >
+
     <button id="addMemberBtn" class="member-add-btn">
       + Сурагч нэмэх
     </button>
 
     <p id="memberStatus"></p>
+  </div>
+</section>
+<section id="admin" class="section admin-section">
+  <div class="admin-header">
+    <p class="eyebrow">ADMIN PANEL</p>
+    <h2>Админ хэсэг</h2>
+    <p>OneClass сайтын мэдээлэл болон сурагчдыг удирдах хэсэг.</p>
+  </div>
+
+  <div class="admin-box">
+    <h3>Удирдлага</h3>
+
+    <button id="adminMembersBtn">
+      👥 Сурагч удирдах
+    </button>
+
+    <button id="adminMediaBtn">
+      🖼 Зураг / видео удирдах
+    </button>
   </div>
 </section>
 

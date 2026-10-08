@@ -36,7 +36,7 @@ loginBtn.addEventListener("click", async () => {
   loginStatus.textContent = "Нэвтэрч байна…";
   loginBtn.disabled = true;
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data,error } = await supabase.auth.signInWithPassword({
     email: email,
     password: password
   });
@@ -46,7 +46,15 @@ loginBtn.addEventListener("click", async () => {
     loginBtn.disabled = false;
     return;
   }
+const user = data.user;
 
+if (user.email === "ariunbayraltanshagai218@gmail.com") {
+  const adminBtn = document.querySelector("#adminBtn");
+
+  if (adminBtn) {
+    adminBtn.style.display = "inline-block";
+  }
+}
   loginStatus.textContent = "Амжилттай нэвтэрлээ!";
   loginScreen.style.display = "none";
   loginBtn.disabled = false;
@@ -264,6 +272,19 @@ async function loadMembers() {
 
       <h3>${esc(member.name)}</h3>
       <p>${esc(member.role || "Сурагч")}</p>
+
+      <button
+       class="delete-member-btn"
+       data-id="${member.id}"
+      >
+       🗑 Устгах
+      </button>
+      <button
+       class="edit-member-btn"
+       data-id="${member.id}"
+      >
+       ✏️ Засах
+      </button>
     `;
 
     memberList.appendChild(card);
@@ -351,8 +372,18 @@ function showSection(id) {
     document.querySelector("#videos"),
     document.querySelector("#memories"),
     document.querySelector("#members"),
-    document.querySelector("#upload")
+    document.querySelector("#upload"),
+    document.querySelector("#admin")
   ];
+  const adminBtn = document.querySelector("#adminBtn");
+
+if (adminBtn) {
+  adminBtn.addEventListener("click", e => {
+    e.preventDefault();
+    showSection("#admin");
+    window.scrollTo(0, 0);
+  });
+}
 
   sections.forEach(section => {
     if (section) {
@@ -390,6 +421,14 @@ heroLinks.forEach(link => {
 
 // Эхлэхэд нүүр хэсэг харагдана
 showSection(".hero");
+const adminMembersBtn = document.querySelector("#adminMembersBtn");
+
+if (adminMembersBtn) {
+  adminMembersBtn.addEventListener("click", () => {
+    showSection("#members");
+    window.scrollTo(0, 0);
+  });
+}
 const brand = document.querySelector(".brand");
 
 if (brand) {
@@ -399,3 +438,57 @@ if (brand) {
     window.scrollTo(0, 0);
   });
 }
+const adminBtn = document.querySelector("#adminBtn");
+
+if (adminBtn) {
+  adminBtn.style.display = "none";
+}
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".delete-member-btn");
+
+  if (!btn) return;
+
+  const id = btn.dataset.id;
+
+  if (!confirm("Энэ сурагчийг устгах уу?")) return;
+
+  const { error } = await supabase
+    .from("members")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    alert("Устгаж чадсангүй: " + error.message);
+    return;
+  }
+
+  await loadMembers();
+});
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".edit-member-btn");
+
+  if (!btn) return;
+
+  const id = btn.dataset.id;
+
+  const name = prompt("Шинэ нэр оруулна уу:");
+  if (name === null || !name.trim()) return;
+
+  const role = prompt("Мэргэжил / анги:", "Сурагч");
+  if (role === null) return;
+
+  const { error } = await supabase
+    .from("members")
+    .update({
+      name: name.trim(),
+      role: role.trim() || "Сурагч"
+    })
+    .eq("id", id);
+
+  if (error) {
+    alert("Засаж чадсангүй: " + error.message);
+    return;
+  }
+
+  await loadMembers();
+});
