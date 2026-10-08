@@ -272,7 +272,6 @@ async function loadMembers() {
 
 loadMembers();
 const addMemberBtn = document.querySelector("#addMemberBtn");
-
 if (addMemberBtn) {
   addMemberBtn.addEventListener("click", async () => {
     const name = document.querySelector("#memberName").value.trim();
@@ -337,5 +336,66 @@ if (addMemberBtn) {
     }
 
     addMemberBtn.disabled = false;
+  });
+}
+// PAGE NAVIGATION
+const navLinks = document.querySelectorAll("nav a");
+const joinLink = document.querySelector(".join");
+const heroLinks = document.querySelectorAll(".hero-actions a");
+
+function showSection(id) {
+  const sections = [
+    document.querySelector(".hero"),
+    document.querySelector(".stats"),
+    document.querySelector("#photos"),
+    document.querySelector("#videos"),
+    document.querySelector("#memories"),
+    document.querySelector("#members"),
+    document.querySelector("#upload")
+  ];
+
+  sections.forEach(section => {
+    if (section) {
+      section.classList.add("page-section-hidden");
+    }
+  });
+
+  const target = document.querySelector(id);
+
+  if (target) {
+    target.classList.remove("page-section-hidden");
+  }
+}
+
+navLinks.forEach(link => {
+  link.addEventListener("click", e => {
+    e.preventDefault();
+    showSection(link.getAttribute("href"));
+  });
+});
+
+if (joinLink) {
+  joinLink.addEventListener("click", e => {
+    e.preventDefault();
+    showSection("#upload");
+  });
+}
+
+heroLinks.forEach(link => {
+  link.addEventListener("click", e => {
+    e.preventDefault();
+    showSection(link.getAttribute("href"));
+  });
+});
+
+// Эхлэхэд нүүр хэсэг харагдана
+showSection(".hero");
+const brand = document.querySelector(".brand");
+
+if (brand) {
+  brand.addEventListener("click", e => {
+    e.preventDefault();
+    showSection(".hero");
+    window.scrollTo(0, 0);
   });
 }

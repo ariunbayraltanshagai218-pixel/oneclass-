@@ -728,3 +728,10 @@ footer strong{
 .download-video-btn {
   margin-left: 4px;
 }
+.page-section-hidden {
+  display: none !important;
+}
+
+.page-section-active {
+  display: block !important;
+}
