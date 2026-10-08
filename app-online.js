@@ -102,13 +102,13 @@ function render(items) {
     el.innerHTML = `
       <img src="${x.public_url}" alt="${esc(x.name)}" loading="lazy">
 
-      <a
-        href="${x.public_url}?download=${encodeURIComponent(x.name)}"
+      <button
         class="download-btn"
-        target="_blank"
+        data-path="${x.path}"
+        data-name="${x.name}"
       >
         ↓ Татах
-      </a>
+      </button>
     `;
 
     gallery.appendChild(el);
@@ -119,21 +119,17 @@ function render(items) {
     el.className = "video-card";
 
     el.innerHTML = `
-      <video
-        controls
-        preload="metadata"
-        src="${x.public_url}">
-      </video>
+      <video controls preload="metadata" src="${x.public_url}"></video>
 
       <p>${esc(x.name)}</p>
 
-      <a
-        href="${x.public_url}?download=${encodeURIComponent(x.name)}"
+      <button
         class="download-video-btn"
-        target="_blank"
+        data-path="${x.path}"
+        data-name="${x.name}"
       >
         ↓ Бичлэг татах
-      </a>
+      </button>
     `;
 
     videoList.appendChild(el);
@@ -147,6 +143,47 @@ function render(items) {
 
   document.querySelector("#memoryCount").textContent = items.length;
 }
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".download-btn, .download-video-btn");
+
+  if (!btn) return;
+
+  const path = btn.dataset.path;
+  const name = btn.dataset.name;
+
+  btn.disabled = true;
+  btn.textContent = "Татаж байна...";
+
+  try {
+    const { data, error } = await supabase.storage
+      .from(BUCKET)
+      .download(path);
+
+    if (error) throw error;
+
+    const url = URL.createObjectURL(data);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    URL.revokeObjectURL(url);
+
+  } catch (error) {
+    console.error("DOWNLOAD ERROR:", error);
+    alert("Файл татаж чадсангүй.\n" + error.message);
+  }
+
+  btn.disabled = false;
+
+  btn.textContent = btn.classList.contains("download-btn")
+    ? "↓ Татах"
+    : "↓ Бичлэг татах";
+});
 fileInput.addEventListener("change", async (e) => {
   const files = [...e.target.files];
   if (!files.length) return;
