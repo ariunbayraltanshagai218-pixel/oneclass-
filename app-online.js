@@ -21,6 +21,14 @@ const loginStatus = document.querySelector("#loginStatus");
 
 async function checkLogin() {
   await supabase.auth.signOut();
+
+  sessionStorage.setItem("oneclass_admin", "false");
+
+  const adminBtn = document.querySelector("#adminBtn");
+  if (adminBtn) {
+    adminBtn.style.display = "none";
+  }
+
   loginScreen.style.display = "grid";
 }
 
@@ -47,16 +55,21 @@ loginBtn.addEventListener("click", async () => {
     return;
   }
 const user = data.user;
+const isAdmin =
+  user.email?.toLowerCase() ===
+  "ariunbayraltanshagai218@gmail.com";
 
-if (user.email === "ariunbayraltanshagai218@gmail.com") {
-  const adminBtn = document.querySelector("#adminBtn");
+sessionStorage.setItem("oneclass_admin", isAdmin ? "true" : "false");
 
-  if (adminBtn) {
-    adminBtn.style.display = "inline-block";
-  }
+console.log("ADMIN:", isAdmin);
+
+const adminBtn = document.querySelector("#adminBtn");
+if (adminBtn) {
+  adminBtn.style.display = isAdmin ? "inline-block" : "none";
 }
   loginStatus.textContent = "Амжилттай нэвтэрлээ!";
   loginScreen.style.display = "none";
+  await loadMembers();
   loginBtn.disabled = false;
 });
 
@@ -237,6 +250,13 @@ function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&l
 loadMedia();
 async function loadMembers() {
   const memberList = document.querySelector("#memberList");
+  const memberAddBox = document.querySelector(".member-add-box");
+  const isAdmin =
+  loginEmail.value.trim().toLowerCase() ===
+  "ariunbayraltanshagai218@gmail.com";
+  if (memberAddBox) {
+  memberAddBox.style.display = isAdmin ? "block" : "none";
+  }
   const memberCount = document.querySelector("#memberCount");
 
   if (!memberList) return;
@@ -258,12 +278,13 @@ async function loadMembers() {
   data.forEach(member => {
     const card = document.createElement("div");
     card.className = "member-card";
+    const isAdmin = sessionStorage.getItem("oneclass_admin") === "true";
 
     const firstLetter = member.name
       ? member.name.charAt(0).toUpperCase()
       : "?";
 
-    card.innerHTML = `
+        card.innerHTML = `
       ${
         member.photo_url
           ? `<img class="member-photo" src="${member.photo_url}" alt="${esc(member.name)}">`
@@ -273,18 +294,15 @@ async function loadMembers() {
       <h3>${esc(member.name)}</h3>
       <p>${esc(member.role || "Сурагч")}</p>
 
-      <button
-       class="delete-member-btn"
-       data-id="${member.id}"
-      >
-       🗑 Устгах
-      </button>
-      <button
-       class="edit-member-btn"
-       data-id="${member.id}"
-      >
-       ✏️ Засах
-      </button>
+      ${isAdmin ? `
+        <button class="delete-member-btn" data-id="${member.id}">
+          🗑 Устгах
+        </button>
+
+        <button class="edit-member-btn" data-id="${member.id}">
+          ✏️ Засах
+        </button>
+      ` : ""}
     `;
 
     memberList.appendChild(card);
@@ -437,11 +455,6 @@ if (brand) {
     showSection(".hero");
     window.scrollTo(0, 0);
   });
-}
-const adminBtn = document.querySelector("#adminBtn");
-
-if (adminBtn) {
-  adminBtn.style.display = "none";
 }
 document.addEventListener("click", async (e) => {
   const btn = e.target.closest(".delete-member-btn");
