@@ -262,11 +262,40 @@ nav a:hover{
   gap:12px;
 }
 
-.gallery-item{
-  aspect-ratio:1;
-  overflow:hidden;
-  background:#ddd;
-  position:relative;
+.gallery-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: transparent;
+  position: relative;
+  overflow: visible;
+  aspect-ratio: auto;
+}
+
+.gallery-item img {
+  width: 100%;
+  aspect-ratio: 1;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+}
+
+.gallery-item button {
+  position: static !important;
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  padding: 10px;
+  margin: 0;
+  border: 0;
+  border-radius: 8px;
+  background: #111;
+  color: #fff;
+  opacity: 1 !important;
+  visibility: visible !important;
+  cursor: pointer;
+  box-sizing: border-box;
 }
 
 .gallery-item img{
@@ -280,17 +309,21 @@ nav a:hover{
   transform:scale(1.04);
 }
 
-.gallery-item button{
-  position:absolute;
-  right:10px;
-  top:10px;
-  border:0;
-  border-radius:50%;
-  width:30px;
-  height:30px;
-  background:#fff;
-  cursor:pointer;
-  opacity:.85;
+.gallery-item button {
+  position: relative !important;
+  right: auto !important;
+  top: auto !important;
+  border: 0;
+  border-radius: 8px;
+  width: 100% !important;
+  height: auto !important;
+  padding: 10px;
+  margin-top: 8px;
+  background: #fff;
+  cursor: pointer;
+  opacity: 1 !important;
+  display: block !important;
+  box-sizing: border-box;
 }
 
 /* VIDEOS */
@@ -855,3 +888,47 @@ footer strong{
     scroll-margin-top: 120px;
   }
 }
+```css
+/* OneClass зураг татах, устгах товч */
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.gallery-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.media-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
+.media-actions button {
+  display: inline-block;
+  padding: 9px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.gallery-item .download-btn {
+  background: #2563eb;
+  color: white;
+}
+
+.gallery-item .delete-media-btn {
+  background: #dc2626;
+  color: white;
+}
+
+.media-actions button:hover {
+  opacity: 0.85;
+}
+```

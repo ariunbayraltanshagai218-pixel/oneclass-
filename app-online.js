@@ -113,31 +113,51 @@ function render(items) {
   gallery.innerHTML = "";
   videoList.innerHTML = "";
 
+  const isAdmin =
+    sessionStorage.getItem("oneclass_admin") === "true";
+
   const photos = items.filter(x => x.type === "photo");
-  const videos = items.filter(x => x.type === "video");
+const videos = items.filter(x => x.type === "video");
 
-  photos.forEach(x => {
-    const el = document.createElement("div");
-    el.className = "gallery-item";
+photos.forEach(x => {
+  const el = document.createElement("div");
+  el.className = "gallery-item";
 
-    el.innerHTML = `
-      <img src="${x.public_url}" alt="${esc(x.name)}" loading="lazy">
+  el.innerHTML = `
+    <img
+      src="${esc(x.public_url)}"
+      alt="${esc(x.name)}"
+      loading="lazy"
+    >
 
+    <div class="media-actions">
       <button
+        type="button"
         class="download-btn"
-        data-path="${x.path}"
-        data-name="${x.name}"
+        data-path="${esc(x.path)}"
+        data-name="${esc(x.name)}"
       >
-        ↓ Татах
+        ⬇ Зураг татах
       </button>
-    `;
 
-    gallery.appendChild(el);
-  });
+      ${isAdmin ? `
+        <button
+          type="button"
+          class="delete-media-btn"
+          data-id="${esc(x.id)}"
+          data-path="${esc(x.path)}"
+        >
+          🗑 Устгах
+        </button>
+      ` : ""}
+    </div>
+  `;
 
-  videos.forEach(x => {
-    const el = document.createElement("div");
-    el.className = "video-card";
+  gallery.appendChild(el);
+});
+videos.forEach(x => {
+  const el = document.createElement("div");
+  el.className = "video-card";
 
     el.innerHTML = `
       <video controls preload="metadata" src="${x.public_url}"></video>
@@ -147,10 +167,20 @@ function render(items) {
       <button
         class="download-video-btn"
         data-path="${x.path}"
-        data-name="${x.name}"
+        data-name="${esc(x.name)}"
       >
         ↓ Бичлэг татах
       </button>
+
+      ${isAdmin ? `
+        <button
+          class="delete-media-btn"
+          data-id="${x.id}"
+          data-path="${x.path}"
+        >
+          🗑 Устгах
+        </button>
+      ` : ""}
     `;
 
     videoList.appendChild(el);
@@ -504,4 +534,61 @@ document.addEventListener("click", async (e) => {
   }
 
   await loadMembers();
+});
+// ADMIN MEDIA NAVIGATION
+const adminMediaBtn = document.querySelector("#adminMediaBtn");
+
+if (adminMediaBtn) {
+  adminMediaBtn.addEventListener("click", () => {
+    showSection("#photos");
+    window.scrollTo(0, 0);
+  });
+}
+// Зураг, видео устгах
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".delete-media-btn");
+  if (!btn) return;
+
+  // Админ биш бол устгахгүй
+  if (sessionStorage.getItem("oneclass_admin") !== "true") {
+    alert("Зөвхөн админ устгах боломжтой!");
+    return;
+  }
+
+  const id = btn.dataset.id;
+  const path = btn.dataset.path;
+
+  if (!confirm("Энэ зураг эсвэл бичлэгийг устгах уу?")) {
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Устгаж байна...";
+
+  // Эхлээд Storage-оос файлыг устгана
+  const { error: storageError } = await supabase.storage
+    .from(BUCKET)
+    .remove([path]);
+
+  if (storageError) {
+    alert("Файл устгаж чадсангүй: " + storageError.message);
+    btn.disabled = false;
+    btn.textContent = "🗑 Устгах";
+    return;
+  }
+
+  // Дараа нь өгөгдлийн сангаас бичлэгийг устгана
+  const { error: dbError } = await supabase
+    .from("media")
+    .delete()
+    .eq("id", id);
+
+  if (dbError) {
+    alert("Өгөгдөл устгаж чадсангүй: " + dbError.message);
+    await loadMedia();
+    return;
+  }
+
+  alert("Амжилттай устгалаа!");
+  await loadMedia();
 });
