@@ -888,7 +888,6 @@ footer strong{
     scroll-margin-top: 120px;
   }
 }
-```css
 /* OneClass зураг татах, устгах товч */
 .gallery-item {
   position: relative;
@@ -931,4 +930,3 @@ footer strong{
 .media-actions button:hover {
   opacity: 0.85;
 }
-```

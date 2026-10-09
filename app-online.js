@@ -20,16 +20,19 @@ const loginBtn = document.querySelector("#loginBtn");
 const loginStatus = document.querySelector("#loginStatus");
 
 async function checkLogin() {
-  await supabase.auth.signOut();
-
   sessionStorage.setItem("oneclass_admin", "false");
 
+  await supabase.auth.signOut();
+
   const adminBtn = document.querySelector("#adminBtn");
+
   if (adminBtn) {
     adminBtn.style.display = "none";
   }
 
   loginScreen.style.display = "grid";
+
+  await loadMedia();
 }
 
 loginBtn.addEventListener("click", async () => {
@@ -68,9 +71,12 @@ if (adminBtn) {
   adminBtn.style.display = isAdmin ? "inline-block" : "none";
 }
   loginStatus.textContent = "Амжилттай нэвтэрлээ!";
-  loginScreen.style.display = "none";
-  await loadMembers();
-  loginBtn.disabled = false;
+loginScreen.style.display = "none";
+
+await loadMedia();
+await loadMembers();
+
+loginBtn.disabled = false;
 });
 
 checkLogin();
@@ -78,7 +84,18 @@ const logoutBtn = document.querySelector("#logoutBtn");
 
 logoutBtn.addEventListener("click", async () => {
   await supabase.auth.signOut();
+
+  sessionStorage.setItem("oneclass_admin", "false");
+
+  const adminBtn = document.querySelector("#adminBtn");
+
+  if (adminBtn) {
+    adminBtn.style.display = "none";
+  }
+
   loginScreen.style.display = "grid";
+
+  await loadMedia();
 });
 const gallery = document.querySelector("#gallery");
 const videoList = document.querySelector("#videoList");
@@ -114,10 +131,11 @@ function render(items) {
   videoList.innerHTML = "";
 
   const isAdmin =
-    sessionStorage.getItem("oneclass_admin") === "true";
+  sessionStorage.getItem("oneclass_admin") === "true" &&
+  supabase.auth.getSession() !== null;
 
   const photos = items.filter(x => x.type === "photo");
-const videos = items.filter(x => x.type === "video");
+  const videos = items.filter(x => x.type === "video");
 
 photos.forEach(x => {
   const el = document.createElement("div");
